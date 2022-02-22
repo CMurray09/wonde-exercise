@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\WondeApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,14 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+// Group route for all methods in the WondeAPiController
+Route::controller(WondeApiController::class)->group(function() {
+    Route::get('/classroom', 'index');
+});
+
+// Group for all routes that require authentication before being accessed
+Route::middleware('auth')->group(function() {
+    Route::get('/dashboard', function() {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+});

@@ -6,7 +6,7 @@ use Inertia\Inertia;
 
 class WondeApiController extends Controller
 {
-    public function index() {
+    public function getEmployeeClassroomStudents() {
         $token = config('services.token')['key'];
         $schoolID = 'A1930499544';
 

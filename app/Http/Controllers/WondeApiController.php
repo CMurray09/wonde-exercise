@@ -3,19 +3,27 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Wonde\Endpoints\Schools;
 
 class WondeApiController extends Controller
 {
+    /** Get the list of employees and render the view */
     public function classroomIndex(): \Inertia\Response
     {
-        $token = config('services.token')['key'];
-        $schoolID = 'A1930499544';
-
-        $client = new \Wonde\Client($token);
-        $school = $client->school($schoolID);
+        $school = $this->getSchoolWithTokenAndID();
         $employees = $this->getEmployees($school);
 
         return Inertia::render('Classroom', ['employees' => $employees]);
+    }
+
+    /** Setup the API client with the env token and school ID
+     *  Return the Wonde Schools
+     */
+    public function getSchoolWithTokenAndID(): Schools {
+        $token = config('services.token')['key'];
+        $schoolID = config('services.schoolID')['key'];
+        $client = new \Wonde\Client($token);
+        return $client->school($schoolID);
     }
 
     /** Get the list of employees that have at least one class */

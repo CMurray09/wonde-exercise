@@ -1,30 +1,45 @@
 <template>
-    <app-layout title="Classroom">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Classroom
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <welcome />
-                </div>
-            </div>
+    <div>
+        <h2 class="font-semibold text-xl leading-tight">
+            Classroom
+        </h2>
+    </div>
+    <div class="flex-row">
+        <div class="flex-col">
+            <select v-bind:value="employees">
+                <option>John Doe</option>
+                <option>Emma Smith</option>
+            </select>
         </div>
-    </app-layout>
+
+        <div class="flex-col">
+            <select v-bind:value="classes">
+                <option>English</option>
+                <option>Math</option>
+            </select>
+        </div>
+    </div>
+
+    <table v-bind:value="students">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        <tr><td>Kelsey</td><td>Smith</td></tr>
+        <tr><td>Jacob</td><td>Smith</td></tr>
+    </table>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import Welcome from '@/Jetstream/Welcome.vue'
+import Dropdown from "@/Jetstream/Dropdown";
 
 export default defineComponent({
-    components: {
-        AppLayout,
-        Welcome,
-    },
+    components: {Dropdown},
+    props: {
+        employees: Array,
+        classes: Array,
+        students: Array,
+    }
 })
 </script>

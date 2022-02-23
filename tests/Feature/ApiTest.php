@@ -23,4 +23,20 @@ class ApiTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /**
+     * Should check that an invalid token results in an unauthorized response.
+     *
+     * @return void
+     */
+    public function test_api_invalid_token()
+    {
+        $token = '12345';
+        $schoolID = config('services.schoolID')['key'];
+
+        $client = new \Wonde\Client($token);
+        $school = $client->school($schoolID);
+        $response = $school->employees->all();
+        $response->assertStatus(401);
+    }
 }

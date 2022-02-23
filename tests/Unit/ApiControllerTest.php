@@ -8,6 +8,20 @@ use PHPUnit\Framework\TestCase;
 class ApiControllerTest extends TestCase
 {
     /**
+     * Should check that the domain can be retrieved from the API.
+     *
+     * @return void
+     */
+    public function test_api_domain_name_can_be_retrieved()
+    {
+        $domainName = 'api.wonde.com';
+        $controller = new WondeApiController();
+        $school = $controller->getSchoolWithTokenAndID();
+        $response = $school->employees->all()->domain;
+        $this->assertEquals($response, $domainName);
+    }
+
+    /**
      * Should retrieve the list of employees that have one or more classes.
      *
      * @return void

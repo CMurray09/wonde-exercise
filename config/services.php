@@ -34,4 +34,8 @@ return [
         'key' => env('API_TOKEN'),
     ],
 
+    'schoolID' => [
+        'key' => env('SCHOOL_ID'),
+    ],
+
 ];

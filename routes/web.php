@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 // Group route for all methods in the WondeAPiController
 Route::controller(WondeApiController::class)->group(function() {
-    Route::get('/classroom', 'getEmployeeClassroomStudents')->name('classroom');
+    Route::get('/classroom', 'classroomIndex')->name('classroom');
 });
 
 // Group for all routes that require authentication before being accessed

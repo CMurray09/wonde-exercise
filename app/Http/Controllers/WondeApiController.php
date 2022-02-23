@@ -3,55 +3,73 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Wonde\Endpoints\Schools;
 
 class WondeApiController extends Controller
 {
-    public function getEmployeeClassroomStudents(): \Inertia\Response
+    /** Get the list of employees and render the view */
+    public function classroomIndex(): \Inertia\Response
     {
+        $school = $this->getSchoolWithTokenAndID();
+        $employees = $this->getEmployees($school);
+
+        return Inertia::render('Classroom', ['employees' => $employees]);
+    }
+
+    /** Setup the API client with the env token and school ID
+     *  Return the Wonde Schools
+     */
+    public function getSchoolWithTokenAndID(): Schools {
         $token = config('services.token')['key'];
-        $schoolID = 'A1930499544';
-
+        $schoolID = config('services.schoolID')['key'];
         $client = new \Wonde\Client($token);
-        $school = $client->school($schoolID);
-
-        /** TODO:
-         * 1: Retrieve the list of employees to send to the front-end.
-         *    This list will be displayed in a dropdown for the user to select from.
-         * 2: A list of classes that correlates to the employee ID will be retrieved and displayed in a second dropdown.
-         * 3: After the user selects a class from the second list,
-         *    the student names that correlates to the class ID will be retrieved and displayed in a table.
-         */
-
-        // Remove testDataArray after the above is complete
-        $testDataArray = array();
-        array_push($testDataArray, 'John Smith');
-          return Inertia::render('Classroom', ['employees' => $testDataArray]);
-
+        return $client->school($schoolID);
     }
 
-    // Get and return a list of employees
+    /** Get the list of employees that have at least one class */
     public function getEmployees($school): array {
-        $employeeArray = array();
-        foreach ($school->employees->all() as $employee) {
-            array_push($employeeArray, $employee->forename . ' ' . $employee->surname);
+        $employees = array();
+        foreach ($school->employees->all(['classes']) as $employee) {
+            if (!empty($employee->classes->data)) {
+                array_push($employees, ["fullName" => $employee->forename . ' ' . $employee->surname, "id" => $employee->id]);
+            }
         }
-        return $employeeArray;
+        return $employees;
     }
 
-    // Get a list of classes
-    public function getClasses($school): array {
-        $classArray = array();
-        foreach ($school->classes->all() as $class) {
-            array_push($classArray, $class->name);
+    /** Get the list of classes that match the provided employeeID */
+    public function getClasses($school, $employeeID): array {
+        $employeeClasses = array();
+        foreach ($school->employees->all(['classes']) as $employee) {
+            if (!empty($employee->classes->data) && $employee->id == $employeeID) {
+//                dd($employee);
+                foreach($employee->classes->data as $class)
+                array_push($employeeClasses, ["className" => $class->name, "id" => $class->id]);
+            }
         }
-        return $classArray;
+        return $employeeClasses;
     }
 
-    // Get and return a list of students with contact info
-    public function getStudents($school): array {
+
+    /** Get the student list from the provided classID and employeeID
+     * --------------------------------------------------------------
+     * Loop through the classes and check if the ID matches the selected class.
+     * Then loop through the class employees to check if the ID matches the selected employee.
+     *  Last, loop through the students to add them to the array
+     */
+    public function getStudents($school, $classID, $employeeID): array {
         $studentArray = array();
-        foreach ($school->students->all(['contacts']) as $student) {
-            array_push($studentArray, $student->forename . ' ' . $student->surname);
+        foreach ($school->classes->all(['students', 'employees']) as $class) {
+            if ($class->id == $classID) {
+                foreach ($class->employees->data as $employee) {
+                    if ($employee->id == $employeeID) {
+                        foreach ($class->students->data as $student) {
+                            array_push($studentArray, $student->forename . ' ' . $student->surname);
+                        }
+                        break;
+                    }
+                }
+            }
         }
         return $studentArray;
     }

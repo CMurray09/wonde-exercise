@@ -55,12 +55,13 @@ export default {
     methods: {
         onChangeEmployee(event) {
             let employeeID = event.target.value;
+            this.employeeID = employeeID;
             if (employeeID !== "Choose Employee") {
                 axios({
                     method: 'get',
                     url: '/classes',
                     params: {
-                        employeeID
+                        employeeID: employeeID,
                     }
                 }).then(function (response) {
                     // Check console for class list array
@@ -72,8 +73,9 @@ export default {
             }
         },
         onChangeClass(event) {
-            let employeeID = event.target.value;
+            let employeeID = this.employeeID;
             let studentID = event.target.value;
+            this.studentID = studentID;
             if (employeeID !== "Choose Employee") {
                 axios({
                     method: 'get',

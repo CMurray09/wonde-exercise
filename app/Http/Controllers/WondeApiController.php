@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Wonde\Endpoints\Schools;
 
@@ -38,16 +39,17 @@ class WondeApiController extends Controller
     }
 
     /** Get the list of classes that match the provided employeeID */
-    public function getClasses($school, $employeeID): array {
-        $employeeClasses = array();
+    public function getClasses($employeeID): \Illuminate\Http\JsonResponse {
+        $school = $this->getSchoolWithTokenAndID();
+        $classes = array();
         foreach ($school->employees->all(['classes']) as $employee) {
             if (!empty($employee->classes->data) && $employee->id == $employeeID) {
-//                dd($employee);
                 foreach($employee->classes->data as $class)
-                array_push($employeeClasses, ["className" => $class->name, "id" => $class->id]);
+                array_push($classes, ["className" => $class->name, "id" => $class->id]);
             }
         }
-        return $employeeClasses;
+
+        return response()->json(['status' => 200, 'data' => $classes]);
     }
 
 
@@ -57,7 +59,7 @@ class WondeApiController extends Controller
      * Then loop through the class employees to check if the ID matches the selected employee.
      *  Last, loop through the students to add them to the array
      */
-    public function getStudents($school, $classID, $employeeID): array {
+    public function getStudents($school, $classID, $employeeID): \Illuminate\Http\JsonResponse {
         $studentArray = array();
         foreach ($school->classes->all(['students', 'employees']) as $class) {
             if ($class->id == $classID) {
@@ -71,6 +73,6 @@ class WondeApiController extends Controller
                 }
             }
         }
-        return $studentArray;
+        return response()->json(['status' => 200, 'data' => $studentArray]);
     }
 }

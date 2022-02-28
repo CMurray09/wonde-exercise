@@ -18,4 +18,4 @@ Multiple dropdowns will be on display, one for employee names, and one for class
 
 <h1> Classroom Page: </h1> <br>
 
-!![](wondeshowcase.gif)
+![](wondeshowcase.gif)

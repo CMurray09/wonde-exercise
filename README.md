@@ -15,6 +15,3 @@ Requires Docker & PHP 8.
 The aim of this project is to help Teachers see which students are in their class on each day of the week. <br>
 The list of students can be found by clicking on the "classroom" link or by going to "/classroom". <br>
 Multiple dropdowns will be on display, one for employee names, and one for classrooms. Once the two dropdowns have had an option selected, the table will be filled with student names that belong to the selected employee & classroom. <br>
-
-<h1> Issues </h1>
-Front-end could use some updated styling and include a data loading spinner.

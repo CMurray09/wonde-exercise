@@ -19,8 +19,8 @@
         <div class="flex-col">
             <select class="form-control" @change="onChangeClass($event)">
                 <option value="Choose Class">Choose Class</option>
-                <option v-for="className in classList" :value="className.id">
-                    {{className.className}}
+                <option v-for="classList in this.classList" :value="classList.id">
+                    {{classList.className}}
                 </option>
             </select>
         </div>
@@ -28,9 +28,9 @@
 
     <table v-if="this.studentList.length > 0">
         <tr>
-            <th>Student Full Name</th>
+            <th>Student's Full Name</th>
         </tr>
-        <tr v-for="student in studentList"><td>{{ student.fullName }}</td></tr>
+        <tr v-for="student in studentList"><td>{{ student }}</td></tr>
     </table>
 </template>
 
@@ -43,7 +43,7 @@ export default {
             classList: [],
             studentList: [],
             employeeID: null,
-            studentID: null,
+            classID: null,
         }
     },
     props: {
@@ -53,41 +53,32 @@ export default {
         },
     },
     methods: {
-        onChangeEmployee(event) {
-            let employeeID = event.target.value;
-            this.employeeID = employeeID;
-            if (employeeID !== "Choose Employee") {
-                axios({
-                    method: 'get',
-                    url: '/classes',
-                    params: {
-                        employeeID: employeeID,
-                    }
-                }).then(function (response) {
-                    // Check console for class list array
-                    console.log(response.data.data);
-                    this.classList = response.data.data;
+         onChangeEmployee(event) {
+             /** Checks if the same or default option has been selected. No need to reload the same data. */
+            if (event.target.value !== "Choose Employee" && this.employeeID !== event.target.value) {
+                this.employeeID = event.target.value;
+                this.classList = [];
+                this.studentList = [];
+                axios.get('/classes/' + this.employeeID)
+                    .then((response) => {
+                        for(const item of response.data[0]) {
+                            this.classList.push(item);
+                        }
                 }).catch(function (error) {
                     console.log(error);
                 })
             }
         },
         onChangeClass(event) {
-            let employeeID = this.employeeID;
-            let studentID = event.target.value;
-            this.studentID = studentID;
-            if (employeeID !== "Choose Employee") {
-                axios({
-                    method: 'get',
-                    url: '/students',
-                    params: {
-                        employeeID: employeeID,
-                        studentID: studentID
-                    }
-                }).then(function (response) {
-                    // Check console for student list array
-                    console.log(response.data.data);
-                    this.studentList = response.data.data;
+            /** Checks if the same or default option has been selected. No need to reload the same data. */
+            if (event.target.value !== "Choose Class" && this.classID !== event.target.value) {
+                this.classID = event.target.value;
+                this.studentList = [];
+                axios.get('/students/' + this.classID + '/' + this.employeeID)
+                    .then((response) => {
+                        for(const item of response.data[0]) {
+                            this.studentList.push(item);
+                        }
                 }).catch(function (error) {
                     console.log(error);
                 })

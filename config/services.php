@@ -30,4 +30,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'token' => [
+        'key' => env('API_TOKEN'),
+    ],
+
+    'schoolID' => [
+        'key' => env('SCHOOL_ID'),
+    ],
+
 ];

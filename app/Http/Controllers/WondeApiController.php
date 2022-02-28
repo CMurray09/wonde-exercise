@@ -40,8 +40,6 @@ class WondeApiController extends Controller
 
     /** Get the list of classes that match the provided employeeID */
     public function getClasses($employeeID): \Illuminate\Http\JsonResponse {
-        // Uncomment to test/demo using specific IDs. The JSON response can be checked at "/classes"
-        // $employeeID = "A1375078684";
         $school = $this->getSchoolWithTokenAndID();
         $classes = array();
         foreach ($school->employees->all(['classes']) as $employee) {
@@ -51,7 +49,7 @@ class WondeApiController extends Controller
             }
         }
 
-        return response()->json(['status' => 200, 'data' => $classes]);
+        return response()->json(['status' => 200, $classes]);
     }
 
 
@@ -62,9 +60,6 @@ class WondeApiController extends Controller
      *  Last, loop through the students to add them to the array
      */
     public function getStudents($classID, $employeeID): \Illuminate\Http\JsonResponse {
-        // Uncomment to test/demo using specific IDs. The JSON response can be checked at "/students"
-        // $employeeID = "A1375078684";
-        // $classID = "A1022974129";
         $school = $this->getSchoolWithTokenAndID();
         $studentArray = array();
         foreach ($school->classes->all(['students', 'employees']) as $class) {
@@ -79,6 +74,6 @@ class WondeApiController extends Controller
                 }
             }
         }
-        return response()->json(['status' => 200, 'data' => $studentArray]);
+        return response()->json(['status' => 200, $studentArray]);
     }
 }

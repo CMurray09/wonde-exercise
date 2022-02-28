@@ -17,6 +17,4 @@ The list of students can be found by clicking on the "classroom" link or by goin
 Multiple dropdowns will be on display, one for employee names, and one for classrooms. Once the two dropdowns have had an option selected, the table will be filled with student names that belong to the selected employee & classroom. <br>
 
 <h1> Issues </h1>
-Parameters for the axios request do not seem to reach the api controller. This could not be debugged in time so a comment was added in the meantime for any demonstration purposes. Go to the mentioned urls to test the API response or call the method directly from the classroomIndex method. <br>
-The API calls have been tested and retrieve the correct data based off the provided IDs. <br>
-Front-end could use some updated styling.
+Front-end could use some updated styling and include a data loading spinner.
